@@ -1,3 +1,4 @@
+"use strict";
 let Discord = require("discord.js");
 const { Client, RichEmbed } = require('discord.js');
 let config = require("./auth.json");
@@ -58,7 +59,6 @@ client.on("message", (message) => {
         !!register-gwh [Format IGN|Job]\n\
         !!clear-list [bwt bersihin list]");
       message.channel.send(embed);
-    message.channel.sendMessage(member[0] + " ga bisa daftar 2x bangsat.");
   } else if(message.content.startsWith(prefix + "clear-list")) {
     fs.readFile('gwh.json', (err, data) => {
         if(err) throw err;
