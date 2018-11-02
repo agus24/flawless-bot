@@ -42,10 +42,14 @@ client.on("message", (message) => {
             if(err) throw err;
             let gwhData = JSON.parse(data);
             if(!findJson(gwhData, member[0], 'IGN')) {
-                gwhData.push({"IGN" : member[0], "JOB" : member[1]});
-                let json = JSON.stringify(gwhData);
-                fs.writeFileSync('tmp/gwh.json', json);
-                message.channel.sendMessage(member[0] + " ("+member[1]+") has been added.");
+                if(roleCheck(member[1])) {
+                    gwhData.push({"IGN" : member[0], "JOB" : member[1]});
+                    let json = JSON.stringify(gwhData);
+                    fs.writeFileSync('tmp/gwh.json', json);
+                    message.channel.sendMessage(member[0] + " ("+member[1]+") has been added.");
+                } else {
+                    message.channel.sendMessage("Nulis role tolong yg bener ya kakak. :)");
+                }
             } else {
                 message.channel.sendMessage(member[0] + " ga bisa daftar 2x bangsat.");
             }
@@ -72,6 +76,16 @@ function findJson(json, data, key) {
     for(let i = 0 ; i < json.length ; i++) {
         if(json[i][key] == data) {
             return true
+        }
+    }
+    return false;
+}
+
+function roleCheck(role) {
+    let roles = ["Berseker", "Swordmaster", "Crusader", "Renegade", "Templar", "Apostle", "Demolitionist", "Artisan", "Gambler", "Assassin", "Ice Wizard", "Fire Wizzard"];
+    for(let i = 0 ; i < roles.length ; i++) {
+        if(roles[i] == role) {
+            return true;
         }
     }
     return false;
