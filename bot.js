@@ -13,7 +13,7 @@ client.on("message", (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
   if (message.content.startsWith(prefix + "gwh-list")) {
-    fs.readFile('gwh.json', (err, data) => {
+    fs.readFile('tmp/gwh.json', (err, data) => {
         let dt = JSON.parse(data);
         if(!dt.length == 0) {
             var value = ''
@@ -38,13 +38,13 @@ client.on("message", (message) => {
     if(member[1] == undefined) {
         message.channel.sendMessage("Butuh job bwt register.");
     } else {
-        fs.readFile('gwh.json', (err, data) => {
+        fs.readFile('tmp/gwh.json', (err, data) => {
             if(err) throw err;
             let gwhData = JSON.parse(data);
             if(!findJson(gwhData, member[0], 'IGN')) {
                 gwhData.push({"IGN" : member[0], "JOB" : member[1]});
                 let json = JSON.stringify(gwhData);
-                fs.writeFileSync('gwh.json', json);
+                fs.writeFileSync('tmp/gwh.json', json);
                 message.channel.sendMessage(member[0] + " ("+member[1]+") has been added.");
             } else {
                 message.channel.sendMessage(member[0] + " ga bisa daftar 2x bangsat.");
@@ -60,9 +60,9 @@ client.on("message", (message) => {
         !!clear-list [bwt bersihin list]");
       message.channel.send(embed);
   } else if(message.content.startsWith(prefix + "clear-list")) {
-    fs.readFile('gwh.json', (err, data) => {
+    fs.readFile('tmp/gwh.json', (err, data) => {
         if(err) throw err;
-        fs.writeFileSync('gwh.json', JSON.stringify([]));
+        fs.writeFileSync('tmp/gwh.json', JSON.stringify([]));
         message.channel.sendMessage("List Cleared");
     });
   }
