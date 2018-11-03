@@ -39,12 +39,13 @@ client.on("message", (message) => {
             if(err) throw err;
             let gwhData = JSON.parse(data);
             if(!(findJson(gwhData, member[0], 'IGN')+1)) {
-                if(roleCheck(member[1])) {
+                console.log(member[1]+(message.content.split(" ")[2] != undefined ? " "+message.content.split(" ")[2] : ""))
+                if(roleCheck(member[1])+(message.content.split(" ")[2] != undefined ? " "+message.content.split(" ")[2] : "")) {
                     let lastId = getLastId(gwhData);
                     gwhData.push({"IGN" : member[0], "JOB" : member[1], "id" : lastId});
                     let json = JSON.stringify(gwhData);
                     fs.writeFileSync('tmp/gwh.json', json);
-                    message.channel.sendMessage("@"+message.author.username + "#" + message.author.discriminator+" "+member[0] + " ("+member[1]+") has been added.");
+                    message.channel.sendMessage(message.author.toString()+" "+member[0] + " ("+member[1]+") has been added.");
                 } else {
                     message.channel.sendMessage("Nulis role tolong yg bener ya kakak. :)");
                 }
@@ -177,6 +178,7 @@ function getLastId(json) {
 }
 
 function roleCheck(role) {
+    console.log(role)
     let roles = ["Berserker", "Swordmaster", "Crusader", "Renegade", "Templar", "Apostle", "Demolitionist", "Artisan", "Gambler", "Assassin", "Ice Wizard", "Fire Wizard"];
     for(let i = 0 ; i < roles.length ; i++) {
         if(roles[i] == role) {
