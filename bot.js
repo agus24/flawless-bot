@@ -38,7 +38,7 @@ client.on("message", (message) => {
         fs.readFile('tmp/gwh.json', (err, data) => {
             if(err) throw err;
             let gwhData = JSON.parse(data);
-            if(!findJson(gwhData, member[0], 'IGN')) {
+            if(!(findJson(gwhData, member[0], 'IGN')+1)) {
                 if(roleCheck(member[1])) {
                     let lastId = getLastId(gwhData);
                     gwhData.push({"IGN" : member[0], "JOB" : member[1], "id" : lastId});
