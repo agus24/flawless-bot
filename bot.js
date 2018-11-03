@@ -18,14 +18,11 @@ client.on("message", (message) => {
         if(!dt.length == 0) {
             var value = ''
             for(let i = 0 ; i < dt.length ; i++) {
-                value += (i+1)+`. `+dt[i].IGN+" ("+dt[i].JOB+")\n";
+                value += (dt[i].id)+`. `+dt[i].IGN+" ("+dt[i].JOB+")\n";
             }
             const embed = new RichEmbed()
-              // Set the title of the field
               .setTitle('GWH MEMBER LIST')
-              // Set the color of the embed
               .setColor(0xFF0000)
-              // Set the main content of the embed
               .setDescription(value);
               message.channel.send(embed);
         } else {
@@ -43,10 +40,11 @@ client.on("message", (message) => {
             let gwhData = JSON.parse(data);
             if(!findJson(gwhData, member[0], 'IGN')) {
                 if(roleCheck(member[1])) {
-                    gwhData.push({"IGN" : member[0], "JOB" : member[1]});
+                    let lastId = getLastId(gwhData);
+                    gwhData.push({"IGN" : member[0], "JOB" : member[1], "id" : lastId});
                     let json = JSON.stringify(gwhData);
                     fs.writeFileSync('tmp/gwh.json', json);
-                    message.channel.sendMessage(member[0] + " ("+member[1]+") has been added.");
+                    message.channel.sendMessage("@"+message.author.username + "#" + message.author.discriminator+" "+member[0] + " ("+member[1]+") has been added.");
                 } else {
                     message.channel.sendMessage("Nulis role tolong yg bener ya kakak. :)");
                 }
@@ -69,20 +67,101 @@ client.on("message", (message) => {
         fs.writeFileSync('tmp/gwh.json', JSON.stringify([]));
         message.channel.sendMessage("List Cleared");
     });
-  }
+  } else if (message.content.startsWith(prefix + "party add")) {
+        fs.readFile('tmp/party.json', (err, data) => {
+            let dt = JSON.parse(data);
+            let member = message.content.split(" ")[2];
+            let party = member.split("|")[0]
+            let user = member.split("|")[1]
+            if(findJson(dt, party, "party_name")+1) {
+                let key = findJson(dt, party, "party_name");
+                if(findJson(dt[key].member, user, "username")+1) {
+                    message.channel.sendMessage("User Sudah Terdaftar");
+                } else {
+                    dt[key].member.push({"username" : user});
+                }
+            } else {
+                dt.push({"party_name":party,"member":[{"username":user}]});
+            }
+            console.log(party);
+            fs.writeFileSync('tmp/party.json', JSON.stringify(dt));
+            message.channel.sendMessage("User "+ user +" Didaftarkan ke "+party);
+        });
+    }
+    else if (message.content.startsWith(prefix + "party list")) {
+        fs.readFile('tmp/party.json', (err, data) => {
+            let dt = JSON.parse(data);
+            for(let i = 0 ; i < dt.length; i++) {
+                let member = '';
+                for(let j = 0 ; j < dt[i].member.length ; j++) {
+                    member += (j+1)+`. `+dt[i].member[j].username+`\n`
+                }
+                const embed = new RichEmbed()
+                  .setTitle(dt[i].party_name)
+                  .setColor(0xFF0000)
+                  .setDescription(member);
+                  message.channel.send(embed);
+            }
+        });
+    }
+    else if (message.content.startsWith(prefix + "party remove")) {
+        fs.readFile('tmp/party.json', (err, data) => {
+            let dt = JSON.parse(data);
+            let member = message.content.split(" ")[2];
+            let party = member.split("|")[0];
+            let user = member.split("|")[1];
+
+            if(findJson(dt, party, "party_name")+1) {
+                let key = findJson(dt, party, "party_name");
+                console.log(key);
+                if(findJson(dt[key].member, user, "username")+1) {
+                    let key2 = findJson(dt[key].member, user, "username");
+                    console.log(dt[key].member[key2])
+                    dt[key].member.splice(key2, 1);
+                    fs.writeFileSync('tmp/party.json', JSON.stringify(dt));
+                    message.channel.sendMessage("Member "+user+" Telah di remove dari party "+party);
+                } else {
+                    message.channel.sendMessage("Usernya ga ketemu bangsat.");
+                }
+            } else {
+                message.channel.sendMessage("Itu party guild mana bangsat? ga ketemu sama gw.");
+            }
+        });
+    }
+
+    else if (message.content.startsWith(prefix + "party delete")) {
+        fs.readFile('tmp/party.json', (err, data) => {
+            let dt = JSON.parse(data);
+            let member = message.content.split(" ")[2];
+            let party = member.split("|")[0];
+
+            if(findJson(dt, party, "party_name")+1) {
+                let key = findJson(dt, party, "party_name");
+                dt.splice(key, 1);
+                fs.writeFileSync('tmp/party.json', JSON.stringify(dt));
+                message.channel.sendMessage("Party "+party+" uda gw delete ya.");
+            } else {
+                message.channel.sendMessage("Itu party guild mana bangsat? ga ketemu sama gw.");
+            }
+        });
+    }
 });
 
 function findJson(json, data, key) {
     for(let i = 0 ; i < json.length ; i++) {
         if(json[i][key] == data) {
-            return true
+            return i;
         }
     }
-    return false;
+    return -1;
+}
+
+function getLastId(json) {
+    return json[json.length - 1] == undefined ? 1 : json[json.length - 1].id+1
 }
 
 function roleCheck(role) {
-    let roles = ["Berseker", "Swordmaster", "Crusader", "Renegade", "Templar", "Apostle", "Demolitionist", "Artisan", "Gambler", "Assassin", "Ice Wizard", "Fire Wizzard"];
+    let roles = ["Berserker", "Swordmaster", "Crusader", "Renegade", "Templar", "Apostle", "Demolitionist", "Artisan", "Gambler", "Assassin", "Ice Wizard", "Fire Wizzard"];
     for(let i = 0 ; i < roles.length ; i++) {
         if(roles[i] == role) {
             return true;
