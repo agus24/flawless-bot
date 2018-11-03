@@ -150,8 +150,17 @@ client.on("message", (message) => {
 });
 
 function mutiara() {
-    let kata = ["Tolong rawat saya ya kakak :)", "Lagi sange nih"]
-    return Math.floor(Math.random() * Math.floor(kata.length-1))
+    let kata = [
+        "Kurang pandai mungkin bisa di perbaiki, tapi kalo udah dari lahir itu susah",
+        "Masa mejeng di kota mulu. Mejeng di top rank lah !",
+        "Kalo lo sultan mah leveling di IC pake ransum 20 jari!",
+        "Landak bangsat!!",
+        "Masa mao GWH malah reborn. Cupu!!",
+        "Awal menjadi orang baik, adalah dengan berbuat baik :)"
+    ]
+    let random = Math.floor(Math.random() * Math.floor(kata.length));
+    console.log(random)
+    return kata[random]
 }
 
 function findJson(json, data, key) {
