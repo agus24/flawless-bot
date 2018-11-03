@@ -144,7 +144,9 @@ client.on("message", (message) => {
                 message.channel.sendMessage("Itu party guild mana bangsat? ga ketemu sama gw.");
             }
         });
-    }
+    } else if (message.content.startsWith(prefix + "say")) {
+        message.channel.sendMessage("Lagi sange nih");
+      }
 });
 
 function findJson(json, data, key) {
