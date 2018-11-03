@@ -177,7 +177,7 @@ function getLastId(json) {
 }
 
 function roleCheck(role) {
-    let roles = ["Berserker", "Swordmaster", "Crusader", "Renegade", "Templar", "Apostle", "Demolitionist", "Artisan", "Gambler", "Assassin", "Ice Wizard", "Fire Wizzard"];
+    let roles = ["Berserker", "Swordmaster", "Crusader", "Renegade", "Templar", "Apostle", "Demolitionist", "Artisan", "Gambler", "Assassin", "Ice Wizard", "Fire Wizard"];
     for(let i = 0 ; i < roles.length ; i++) {
         if(roles[i] == role) {
             return true;
