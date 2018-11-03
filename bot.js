@@ -145,9 +145,14 @@ client.on("message", (message) => {
             }
         });
     } else if (message.content.startsWith(prefix + "say")) {
-        message.channel.sendMessage("Lagi sange nih");
-      }
+        message.channel.sendMessage(mutiara());
+    }
 });
+
+function mutiara() {
+    let kata = ["Tolong rawat saya ya kakak :)", "Lagi sange nih"]
+    return Math.floor(Math.random() * Math.floor(kata.length-1))
+}
 
 function findJson(json, data, key) {
     for(let i = 0 ; i < json.length ; i++) {
