@@ -13,7 +13,7 @@ client.on("message", (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
   if (!message.content.startsWith(prefix + "rexy")) {
-    message.channel.sendMessage("Woi Rexy");
+    message.channel.sendMessage("Woi Rexy nih test bot");
   }
 
   if (message.content.startsWith(prefix + "gwh-list")) {
