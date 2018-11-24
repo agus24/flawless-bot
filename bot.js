@@ -12,6 +12,10 @@ client.login(config.token);
 client.on("message", (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
+  if (!message.content.startsWith(prefix + "rexy") {
+    message.channel.sendMessage("Woi Rexy");
+  }
+
   if (message.content.startsWith(prefix + "gwh-list")) {
     fs.readFile('tmp/gwh.json', (err, data) => {
         let dt = JSON.parse(data);
