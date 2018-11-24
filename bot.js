@@ -12,7 +12,7 @@ client.login(config.token);
 client.on("message", (message) => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-  if (!message.content.startsWith(prefix + "rexy") {
+  if (!message.content.startsWith(prefix + "rexy")) {
     message.channel.sendMessage("Woi Rexy");
   }
 
